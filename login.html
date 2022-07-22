@@ -142,6 +142,8 @@
 						}).then((res) => {
 							var vo = res.data;
 							if (vo.code == 10000) {
+								// 如果登录成功，需要将token存储到cookie中
+								setCookieValue("token", vo.msg);
 								window.location.href = "index.html";
 							} else {
 								vm.tips = "登录失败,账号或密码错误!";
