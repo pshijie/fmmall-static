@@ -144,6 +144,9 @@
 							if (vo.code == 10000) {
 								// 如果登录成功，需要将token存储到cookie中
 								setCookieValue("token", vo.msg);
+								// 将用户名和头像的url保存在cookie中
+								setCookieValue("username", vo.data.username);
+								setCookieValue("userImg", vo.data.userImg);
 								window.location.href = "index.html";
 							} else {
 								vm.tips = "登录失败,账号或密码错误!";
