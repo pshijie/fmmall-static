@@ -130,9 +130,12 @@
 														<div class="sort-side">
 															<!-- 每个dl代表一个二级分类 -->
 															<dl class="dl-sort" v-for="c2 in c1.categories">
-																<dt><span :title="c2.categoryName">{{c2.categoryName}}</span></dt>
+																<dt><span
+																		:title="c2.categoryName">{{c2.categoryName}}</span>
+																</dt>
 																<dd v-for="c3 in c2.categories">
-																	<a :title="c3.categoryName" href="search.html"><span>{{c3.categoryName}}</span></a>
+																	<a :title="c3.categoryName"
+																		href="search.html"><span>{{c3.categoryName}}</span></a>
 																</dd>
 															</dl>
 														</div>
@@ -268,45 +271,24 @@
 		<div class="shopMainbg">
 			<div class="shopMain" id="shopmain">
 
-				<!--今日推荐 -->
+				<!--新品推荐 -->
 
 				<div class="am-g am-g-fixed recommendation">
 					<div class="clock am-u-sm-3">
 						<img src=" static/images/2016.png "></img>
-						<p>今日<br>推荐</p>
+						<p>新品<br>推荐</p>
 					</div>
-					<a href=" introduction.html">
+					<a href=" introduction.html" v-for="rp in recommendProducts">
 						<div class="am-u-sm-4 am-u-lg-3 ">
 							<div class="info ">
-								<h3>真的有鱼</h3>
-								<h4>开年福利篇</h4>
+								<h3>{{rp.productName}}</h3>
+								<h4>{{rp.content}}</h4>
 							</div>
 							<div class="recommendationMain one">
-								<img src="static/images/tj.png "></img>
+								<img :src="'static/pimgs/'+rp.imgs[0].url"></img>
 							</div>
 						</div>
 					</a>
-					<a href="introduction.html">
-						<div class="am-u-sm-4 am-u-lg-3 ">
-							<div class="info ">
-								<h3>囤货过冬</h3>
-								<h4>让爱早回家</h4>
-							</div>
-							<div class="recommendationMain two">
-								<img src="static/images/tj1.png "></img>
-							</div>
-						</div>
-					</a>
-					<div class="am-u-sm-4 am-u-lg-3 ">
-						<div class="info ">
-							<h3>浪漫情人节</h3>
-							<h4>甜甜蜜蜜</h4>
-						</div>
-						<div class="recommendationMain three">
-							<img src="static/images/tj2.png "></img>
-						</div>
-					</div>
-
 				</div>
 				<div class="clear "></div>
 				<!--热门活动 -->
@@ -1891,7 +1873,8 @@
 				userimg: "",
 				isLogin: false,
 				indexImgs: [],
-				categories: []
+				categories: [],
+				recommendProducts: []
 			},
 			created: function () {
 				//从cookie中获取token、username、userImg
@@ -1919,6 +1902,26 @@
 				axios(url2).then((res) => {
 					var vo2 = res.data;
 					this.categories = vo2.data;
+					// 初始化分类列表的动画效果
+					setTimeout(function () {
+						$("li").hover(function () {
+							$(".category-content .category-list li.first .menu-in").css("display", "none");
+							$(".category-content .category-list li.first").removeClass("hover");
+							$(this).addClass("hover");
+							$(this).children("div.menu-in").css("display", "block")
+						}, function () {
+							$(this).removeClass("hover")
+							$(this).children("div.menu-in").css("display", "none")
+						});
+					}, 100);
+
+				})
+
+				// 新品推荐
+				var url3 = baseUrl + "index/list-recommends"
+				axios(url3).then((res) => {
+					var vo3 = res.data;
+					this.recommendProducts = vo3.data;
 					// 初始化分类列表的动画效果
 					setTimeout(function () {
 						$("li").hover(function () {
